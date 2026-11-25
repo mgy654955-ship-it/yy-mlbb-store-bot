@@ -218,7 +218,7 @@ async def select_product(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data["product_name"] = product["name"]
         context.user_data["price"] = product["price"]
         await query.edit_message_text(
-            f"🎫 {product['name']} — {fmt_price(product['price'])} ကို ရွေးချယ်ထားပါတယ်။\n\n"
+            f"{product['name']} — {fmt_price(product['price'])} ကို ရွေးချယ်ထားပါတယ်။\n\n"
             "အော်ဒါဆက်လက်လုပ်ဆောင်ဖို့ သင့်ရဲ့ Game ID နဲ့ Zone ID ကို ပို့ပေးပါခင်ဗျာ။ ❤️\n\n"
             "📌 ဥပမာ — 12345678 (1234)\n\n"
             "Game ID နဲ့ Zone ID ကို ဂိမ်းထဲက Profile မှာ ကြည့်ရှုနိုင်ပါတယ်။\n\n"
@@ -321,7 +321,7 @@ async def ask_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"ပစ္စည်း: {order['product_name']}\n"
             f"Game ID: {order['mlbb_id']} ({order['zone_id']})\n"
             f"စုစုပေါင်း: {fmt_price(order['price'])}\n"
-            f"ဝယ်သူ: @{order['username'] or '-'} (ID: {order['user_id']})\n"
+            f"ဝယ်သူ: @{(order['username'] or '-').replace('_', '\_')} (ID: {order['user_id']})\n"
             f"အချိန်: {order['created_at']}\n\n"
             "Screenshot အပေါ်မှာ ကြည့်ပါ။ Confirm / Reject ရွေးပါ။"
         )
@@ -432,7 +432,7 @@ async def send_admin_orders(update: Update, context: ContextTypes.DEFAULT_TYPE):
             f"ပစ္စည်း: {o['product_name']}\n"
             f"Game ID: {o['mlbb_id']} ({o['zone_id']})\n"
             f"စုစုပေါင်း: {fmt_price(o['price'])}\n"
-            f"ဝယ်သူ: @{o['username'] or '-'} (ID: {o['user_id']})\n"
+            f"ဝယ်သူ: @{(o['username'] or '-').replace('_', '\_')} (ID: {o['user_id']})\n"
             f"အချိန်: {o['created_at']}\n\n"
             "Screenshot အပေါ်မှာ ကြည့်ပါ။ Confirm / Reject ရွေးပါ။"
         )
