@@ -259,8 +259,7 @@ async def ask_ids(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"💰 **ငွေလွှဲရန်**\n"
         f"နာမည်: {config.PAYMENT_NAME}\n"
         f"KPay: {config.PAYMENT_KBZ}\n\n"
-            "
-        "ငွေလွှဲပြီးရင် **screenshot (ပုံ)** ကို ဒီမှာ ပို့ပေးပါ။ 📸\n"
+            "ငွေလွှဲပြီးရင် **screenshot (ပုံ)** ကို ဒီမှာ ပို့ပေးပါ။ 📸\n"
         "စာနဲ့ ပို့လို့မရဘူး၊ ပုံပဲ ပို့ပါ။",
         parse_mode="Markdown",
     )
