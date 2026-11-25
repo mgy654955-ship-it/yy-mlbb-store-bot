@@ -172,11 +172,7 @@ def price_list_text():
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.clear()
-    text = (
-        "မင်္ဂလာပါ! 👋\n"
-        "MLBB Weekly Pass ဝယ်လို့ရတဲ့ ဆိုင်ပါ။\n\n"
-        + price_list_text()
-    )
+    text = price_list_text()
     if update.message:
         await update.message.reply_text(text, reply_markup=main_menu_keyboard(), parse_mode="Markdown")
     elif update.callback_query:
@@ -378,7 +374,7 @@ def customer_bot(context):
 
 async def edit_admin_message(query, text):
     try:
-        await edit_admin_message(query, text)
+        await query.edit_message_caption(caption=text)
     except Exception:
         await query.edit_message_text(text=text)
 
