@@ -502,7 +502,7 @@ async def admin_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await edit_admin_message(query, f"{old_caption}\n\n{action_my} — {STATUS_MY[new_status]}")
     if new_status == "confirmed":
         msg = (
-            "✅ သင့်အော်ဒါလေးကို ထည့်သွင်းပေးနေပါပြီခင်ဗျာ။ ခဏလေး စောင့်ဆိုင်းပေးပါနော်။ 🙏\n\n"
+            "✅ သင့်အော်ဒါလေးကို ထည့်သွင်းပေးပြီးပါပြီခင်ဗျာ။ 🙏\n\n"
             "အားပေးမှုအတွက် ကျေးဇူးအများကြီးတင်ပါတယ်ဗျ။ ❤️"
         )
     else:
