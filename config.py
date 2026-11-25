@@ -22,9 +22,9 @@ PRODUCTS = {
     "dia_257": {"name": "💎 257 Diamond", "price": 18500},
     "dia_706": {"name": "💎 706 Diamond", "price": 50000},
     "dia_1050": {"name": "💎 1050 Diamond", "price": 75000},
-    "wp_1": {"name": "🎫 Weekly Pass x1", "price": 7000},
-    "wp_2": {"name": "🎫 Weekly Pass x2", "price": 14000},
-    "wp_3": {"name": "🎫 Weekly Pass x3", "price": 21000},
+    "wp_1": {"name": "🎫 Weekly Pass x1", "price": 7400},
+    "wp_2": {"name": "🎫 Weekly Pass x2", "price": 14800},
+    "wp_3": {"name": "🎫 Weekly Pass x3", "price": 22200},
 }
 
 DIAMOND_KEYS = ["dia_3", "dia_86", "dia_172", "dia_257", "dia_706", "dia_1050"]
