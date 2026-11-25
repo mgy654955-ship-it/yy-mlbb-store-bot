@@ -121,7 +121,7 @@ def fmt_price(n):
 def main_menu_keyboard():
     return InlineKeyboardMarkup(
         [
-            [InlineKeyboardButton("💎 Diamond ဝယ်မယ်", callback_data="cat_diamond")],
+            
             [InlineKeyboardButton("🎫 Weekly Pass ဝယ်မယ်", callback_data="cat_weekly")],
             [InlineKeyboardButton("📦 ငါ့ order တွေ", callback_data="my_orders")],
         ]
@@ -138,12 +138,12 @@ def product_keyboard(keys):
     return InlineKeyboardMarkup(buttons)
 
 def price_list_text():
-    lines = ["🛒 **MLBB Top-Up — စျေးနှုန်း**\n"]
-    lines.append("💎 **Diamond**")
-    for key in config.DIAMOND_KEYS:
-        p = config.PRODUCTS[key]
-        lines.append(f"• {p['name']} — {fmt_price(p['price'])}")
-    lines.append("\n🎫 **Weekly Pass** (1 ခု = 220 Diamond, 7 ရက်)")
+    lines = ["🛒 **MLBB Weekly Pass — စျေးနှုန်း**\n"]
+    
+    
+        
+        
+    lines.append("🎫 **Weekly Pass** (1 ခု = 220 Diamond, 7 ရက်)")
     for key in config.WEEKLY_KEYS:
         p = config.PRODUCTS[key]
         lines.append(f"• {p['name']} — {fmt_price(p['price'])}")
@@ -154,7 +154,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.clear()
     text = (
         "မင်္ဂလာပါ! 👋\n"
-        "MLBB Diamond / Weekly Pass ဝယ်လို့ရတဲ့ ဆိုင်ပါ။\n\n"
+        "MLBB Weekly Pass ဝယ်လို့ရတဲ့ ဆိုင်ပါ။\n\n"
         + price_list_text()
     )
     if update.message:
@@ -174,7 +174,7 @@ async def select_product(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return SELECT_PRODUCT
     if data == "cat_diamond":
         await query.edit_message_text(
-            "💎 Diamond — ဘယ်လောက် ဝယ်မလဲ?", reply_markup=product_keyboard(config.DIAMOND_KEYS)
+            "💎 Diamond က အခု မရသေးဘူး။\n🎫 Weekly Pass ပဲ ရတယ်။", reply_markup=main_menu_keyboard(),
         )
         return SELECT_PRODUCT
     if data == "cat_weekly":
@@ -192,6 +192,12 @@ async def select_product(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not product:
             await query.edit_message_text("ဒီ ပစ္စည်း မရှိတော့ဘူး။ /start နဲ့ ပြန်စလိုက်ပါ။")
             return ConversationHandler.END
+        if key in config.DIAMOND_KEYS:
+            await query.edit_message_text(
+                "💎 Diamond က အခု မရသေးဘူး။\n🎫 Weekly Pass ပဲ ရတယ်။",
+                reply_markup=main_menu_keyboard(),
+            )
+            return SELECT_PRODUCT
         context.user_data["product_key"] = key
         context.user_data["product_name"] = product["name"]
         context.user_data["price"] = product["price"]
