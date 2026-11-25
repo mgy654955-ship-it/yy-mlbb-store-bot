@@ -12,8 +12,8 @@ try:
 except ValueError:
     ADMIN_ID = 0
 
-PAYMENT_NAME = os.getenv("PAYMENT_NAME", "မင်းနာမည်")
-PAYMENT_KBZ = os.getenv("PAYMENT_KBZ", "09XXXXXXXXX")
+PAYMENT_NAME = os.getenv("PAYMENT_NAME", "THIDAR HTWE")
+PAYMENT_KBZ = os.getenv("PAYMENT_KBZ", "09949054189")
 PAYMENT_WAVE = os.getenv("PAYMENT_WAVE", "09XXXXXXXXX")
 
 PRODUCTS = {
