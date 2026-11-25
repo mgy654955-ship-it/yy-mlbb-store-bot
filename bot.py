@@ -258,8 +258,8 @@ async def ask_ids(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"စုစုပေါင်း: {fmt_price(price)}\n\n"
         f"💰 **ငွေလွှဲရန်**\n"
         f"နာမည်: {config.PAYMENT_NAME}\n"
-        f"KBZPay: {config.PAYMENT_KBZ}\n"
-        f"WavePay: {config.PAYMENT_WAVE}\n\n"
+        f"KPay: {config.PAYMENT_KBZ}\n\n"
+            "
         "ငွေလွှဲပြီးရင် **screenshot (ပုံ)** ကို ဒီမှာ ပို့ပေးပါ။ 📸\n"
         "စာနဲ့ ပို့လို့မရဘူး၊ ပုံပဲ ပို့ပါ။",
         parse_mode="Markdown",
