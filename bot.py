@@ -1,5 +1,6 @@
 # bot.py — MLBB Top-Up Bot (Manual Order ONLY)
 import logging
+import re
 import sqlite3
 from datetime import datetime
 
@@ -21,7 +22,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-SELECT_PRODUCT, ASK_ID, ASK_ZONE, ASK_PHOTO = range(4)
+SELECT_PRODUCT, ASK_IDS, ASK_PHOTO = range(3)
 
 STATUS_MY = {
     "pending": "⏳ စောင့်နေတယ်",
@@ -203,45 +204,41 @@ async def select_product(update: Update, context: ContextTypes.DEFAULT_TYPE):
         context.user_data["price"] = product["price"]
         await query.edit_message_text(
             f"ရွေးလိုက်ပြီ: {product['name']} — {fmt_price(product['price'])}\n\n"
-            "🔢 မင်း MLBB ID ကို ပို့ပေးပါ။\n"
-            "(ဂိမ်းထဲက Profile မှာ ကြည့်လို့ရတယ်။ နံပါတ်သက်သက် ပို့ပါ။\n"
-            "ဥပမာ: 12345678)"
+            "🔢 Game ID နဲ့ Zone ID ကို တစ်ခါတည်း ပို့ပေးပါ။\n"
+            "ဥပမာ: 12345678 (1234)\n"
+            "(ဂိမ်းထဲက Profile မှာ ကြည့်လို့ရတယ်။)"
         )
-        return ASK_ID
+        return ASK_IDS
     return SELECT_PRODUCT
 
-async def ask_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def ask_ids(update: Update, context: ContextTypes.DEFAULT_TYPE):
     text = (update.message.text or "").strip()
-    clean = text.replace(" ", "")
-    if not clean.isdigit() or len(clean) < 5:
+    numbers = re.findall(r"\d+", text)
+    if len(numbers) < 2:
         await update.message.reply_text(
-            "❌ MLBB ID မမှန်ဘူး။ နံပါတ်သက်သက် ပြန်ပို့ပေးပါ။\nဥပမာ: 12345678"
+            "❌ Game ID နဲ့ Zone ID နှစ်ခုလုံး လိုတယ်။ တစ်ခါတည်း ပြန်ပို့ပေးပါ။\n"
+            "ဥပမာ: 12345678 (1234)"
         )
-        return ASK_ID
-    context.user_data["mlbb_id"] = clean
-    await update.message.reply_text(
-        "✅ MLBB ID ရပြီ။\n\n"
-        "🌐 အခု Zone / Server ID ကို ပို့ပေးပါ။\n"
-        "(MLBB ID နောက်က ကွင်းထဲက နံပါတ်။ ဥပမာ: 1234)"
-    )
-    return ASK_ZONE
+        return ASK_IDS
+    mlbb_id, zone_id = numbers[0], numbers[1]
+    if len(mlbb_id) < 5 or len(zone_id) < 3:
+        await update.message.reply_text(
+            "❌ Game ID / Zone ID မမှန်ဘူး။ တစ်ခါတည်း ပြန်ပို့ပေးပါ။\n"
+            "ဥပမာ: 12345678 (1234)"
+        )
+        return ASK_IDS
+    context.user_data["mlbb_id"] = mlbb_id
+    context.user_data["zone_id"] = zone_id
+    
 
-async def ask_zone(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = (update.message.text or "").strip()
-    clean = text.replace(" ", "").replace("(", "").replace(")", "")
-    if not clean.isdigit() or len(clean) < 3:
-        await update.message.reply_text(
-            "❌ Zone ID မမှန်ဘူး။ နံပါတ်သက်သက် ပြန်ပို့ပေးပါ။\nဥပမာ: 1234"
-        )
-        return ASK_ZONE
-    context.user_data["zone_id"] = clean
+
     product_name = context.user_data["product_name"]
     price = context.user_data["price"]
-    mlbb_id = context.user_data["mlbb_id"]
+    
     await update.message.reply_text(
         f"📋 **Order အကျဉ်းချုပ်**\n"
         f"ပစ္စည်း: {product_name}\n"
-        f"MLBB ID: {mlbb_id} ({clean})\n"
+        f"Game ID: {mlbb_id} ({zone_id})\n"
         f"စုစုပေါင်း: {fmt_price(price)}\n\n"
         f"💰 **ငွေလွှဲရန်**\n"
         f"နာမည်: {config.PAYMENT_NAME}\n"
@@ -460,8 +457,8 @@ def main():
             SELECT_PRODUCT: [
                 CallbackQueryHandler(select_product, pattern=r"^(cat_|product_|back_menu|my_orders)"),
             ],
-            ASK_ID: [MessageHandler(filters.TEXT & ~filters.COMMAND, ask_id)],
-            ASK_ZONE: [MessageHandler(filters.TEXT & ~filters.COMMAND, ask_zone)],
+            ASK_IDS: [MessageHandler(filters.TEXT & ~filters.COMMAND, ask_ids)],
+            
             ASK_PHOTO: [
                 MessageHandler(filters.PHOTO, ask_photo),
                 MessageHandler(filters.TEXT & ~filters.COMMAND, ask_photo),
