@@ -502,9 +502,8 @@ async def admin_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await edit_admin_message(query, f"{old_caption}\n\n{action_my} — {STATUS_MY[new_status]}")
     if new_status == "confirmed":
         msg = (
-            f"✅ Order {order_id} — ငွေအတည်ပြုပြီ!\n"
-            f"{order['product_name']} ကို မင်း အကောင့် {order['mlbb_id']} ({order['zone_id']}) ထဲ "
-            "ထည့်ပေးတော့မယ်။ ခဏစောင့်ပေးပါနော်။ 🙏"
+            "✅ သင့်အော်ဒါလေးကို ထည့်သွင်းပေးနေပါပြီခင်ဗျာ။ ခဏလေး စောင့်ဆိုင်းပေးပါနော်။ 🙏\n\n"
+            "အားပေးမှုအတွက် ကျေးဇူးအများကြီးတင်ပါတယ်ဗျ။ ❤️"
         )
     else:
         msg = (
