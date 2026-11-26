@@ -318,7 +318,7 @@ async def ask_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         caption = (
             f"🆕 **Order အသစ်: {order_id}**\n"
             f"ပစ္စည်း: {order['product_name']}\n"
-            f"Game ID: {order['mlbb_id']} ({order['zone_id']})\n"
+            f"Game ID: `{order['mlbb_id']}` (`{order['zone_id']}`)\n"
             f"စုစုပေါင်း: {fmt_price(order['price'])}\n"
             f"ဝယ်သူ: @{(order['username'] or '-').replace('_', '\_')} (ID: {order['user_id']})\n"
             f"အချိန်: {order['created_at']}\n\n"
@@ -429,7 +429,7 @@ async def send_admin_orders(update: Update, context: ContextTypes.DEFAULT_TYPE):
         caption = (
             f"📋 **Order: {o['id']}**\n"
             f"ပစ္စည်း: {o['product_name']}\n"
-            f"Game ID: {o['mlbb_id']} ({o['zone_id']})\n"
+            f"Game ID: `{o['mlbb_id']}` (`{o['zone_id']}`)\n"
             f"စုစုပေါင်း: {fmt_price(o['price'])}\n"
             f"ဝယ်သူ: @{(o['username'] or '-').replace('_', '\_')} (ID: {o['user_id']})\n"
             f"အချိန်: {o['created_at']}\n\n"
