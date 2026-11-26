@@ -5,7 +5,7 @@ import re
 import sqlite3
 from datetime import datetime
 
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, KeyboardButton, ReplyKeyboardMarkup, Update
 from telegram.ext import (
     Application,
     CallbackQueryHandler,
@@ -140,6 +140,9 @@ def admin_menu_keyboard():
             [InlineKeyboardButton("📋 Order စာရင်း", callback_data="admin_orders")],
         ]
     )
+def main_reply_keyboard():
+    return ReplyKeyboardMarkup([[KeyboardButton("🛒 ထပ်ဝယ်ယူမည်"), KeyboardButton("📦 အော်ဒါ")]], resize_keyboard=True, is_persistent=True)
+
 
 
 def product_keyboard(keys):
@@ -174,10 +177,18 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     context.user_data.clear()
     text = price_list_text()
     if update.message:
-        await update.message.reply_text(text, reply_markup=main_menu_keyboard(), parse_mode="Markdown")
+        await update.message.reply_text(text, reply_markup=main_reply_keyboard(), parse_mode="Markdown")
     elif update.callback_query:
         await update.callback_query.edit_message_text(text, reply_markup=main_menu_keyboard(), parse_mode="Markdown")
     return SELECT_PRODUCT
+async def buy_more(update, context):
+    await update.message.reply_text("🎫 Weekly Pass — ဘယ်နှခုယူမလဲ?\n(1 ခု = 220 Diamond, 7 ရက်အတွင်း ရတယ်)", reply_markup=product_keyboard(config.WEEKLY_KEYS))
+    return SELECT_PRODUCT
+
+async def orders_button(update, context):
+ await show_my_orders(update, context)
+    return SELECT_PRODUCT
+
 
 async def select_product(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -304,7 +315,7 @@ async def ask_photo(update: Update, context: ContextTypes.DEFAULT_TYPE):
         f"အခြေအနေ: {STATUS_MY['pending']}\n\n"
         "Admin က ငွေလွှဲ screenshot စစ်ပြီး အတည်ပြုပေးမယ်။\n"
         "ခဏစောင့်ပေးပါနော်။ 🙏\n"
-        "အခြေအနေ ကြည့်ချင်ရင် /myorders နှိပ်ပါ။"
+        "အခြေအနေ ကြည့်ချင်ရင် /myorders နှိပ်ပါ။", reply_markup=main_reply_keyboard()
     )
     if config.ADMIN_ID:
         keyboard = InlineKeyboardMarkup(
@@ -563,9 +574,9 @@ def main():
         print("⚠️ ADMIN_BOT_TOKEN မရှိဘူး။ Order တွေကို store bot ကနေပဲ ပို့မယ်။")
     store_app = Application.builder().token(config.BOT_TOKEN).build()
     conv = ConversationHandler(
-        entry_points=[CommandHandler("start", start)],
+        entry_points=[CommandHandler("start", start), MessageHandler(filters.Regex(r"^🛒 ထပ်ဝယ်ယူမည်$"), buy_more), MessageHandler(filters.Regex(r"^📦 အော်ဒါ$"), orders_button)],
         states={
-            SELECT_PRODUCT: [CallbackQueryHandler(select_product, pattern=r"^(cat_|product_|back_menu|my_orders)")],
+            SELECT_PRODUCT: [MessageHandler(filters.Regex(r"^🛒 ထပ်ဝယ်ယူမည်$"), buy_more), MessageHandler(filters.Regex(r"^📦 အော်ဒါ$"), orders_button),CallbackQueryHandler(select_product, pattern=r"^(cat_|product_|back_menu|my_orders)")],
             ASK_IDS: [MessageHandler(filters.TEXT & ~filters.COMMAND, ask_ids)],
             
             ASK_PHOTO: [MessageHandler(filters.PHOTO, ask_photo), MessageHandler(filters.TEXT & ~filters.COMMAND, ask_photo)],
